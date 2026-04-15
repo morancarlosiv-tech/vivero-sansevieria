@@ -1,3 +1,6 @@
+Claro, aquí está el código completo para que lo copies:Aquí está el código completo. Cópialo todo desde aquí:
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,6 +17,21 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sora',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;font-size:15px;}
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--green-dark);display:flex;align-items:center;justify-content:center;z-index:9999;padding:1.5rem;}
+#login-screen.hidden{display:none;}
+.login-box{background:var(--white);border-radius:16px;padding:2rem 1.75rem;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+.login-logo{width:48px;height:48px;background:var(--green-accent);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
+.login-logo svg{width:28px;height:28px;fill:var(--cream);}
+.login-title{text-align:center;font-size:18px;font-weight:600;color:var(--green-dark);margin-bottom:4px;}
+.login-sub{text-align:center;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-bottom:1.5rem;}
+.login-group{margin-bottom:1rem;}
+.login-group label{font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;display:block;margin-bottom:4px;}
+.login-group input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--cream);color:var(--text);font-family:'Sora',sans-serif;outline:none;}
+.login-group input:focus{border-color:var(--green-accent);background:var(--white);}
+.login-btn{width:100%;padding:11px;border-radius:8px;background:var(--green-dark);color:var(--cream);font-size:14px;font-weight:500;border:none;cursor:pointer;font-family:'Sora',sans-serif;margin-top:0.5rem;}
+.login-btn:hover{background:var(--green-mid);}
+.login-err{font-size:12px;color:var(--danger);font-family:'DM Mono',monospace;text-align:center;margin-top:8px;display:none;}
 header{background:var(--green-dark);padding:1rem 1.25rem;display:flex;align-items:center;gap:0.875rem;position:sticky;top:0;z-index:100;}
 .logo{width:34px;height:34px;background:var(--green-accent);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .logo svg{width:20px;height:20px;fill:var(--cream);}
@@ -96,7 +114,6 @@ table.stbl textarea{border:1px solid var(--border);border-radius:6px;padding:4px
 .growth-up{background:#e6f5ef;color:#2d7a5a;}
 .growth-dn{background:#fdf0ef;color:#c0392b;}
 .growth-eq{background:var(--cream);color:var(--text-muted);}
-/* HISTORIAL */
 .hist-session{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;}
 .hist-session-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--cream-dark);border-bottom:1px solid var(--border);}
 .hist-session-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -144,6 +161,25 @@ input[type="number"]{width:100%;padding:9px 12px;border:1px solid var(--border);
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><svg viewBox="0 0 24 24"><path d="M12 2C8 2 6 6 6 9c0 2 1 4 3 5.5V20h6v-5.5C17 13 18 11 18 9c0-3-2-7-6-7zm0 2c2.5 0 4 3 4 5 0 1.5-.8 3-2 4.2V18h-4v-4.8C8.8 12 8 10.5 8 9c0-2 1.5-5 4-5z"/></svg></div>
+    <div class="login-title">Vivero Sansevieria</div>
+    <div class="login-sub">Ingresa tus credenciales para continuar</div>
+    <div class="login-group">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="Ej: vivero2026" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-group">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="login-err">Usuario o contraseña incorrectos.</div>
+  </div>
+</div>
 
 <header>
   <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 2C8 2 6 6 6 9c0 2 1 4 3 5.5V20h6v-5.5C17 13 18 11 18 9c0-3-2-7-6-7zm0 2c2.5 0 4 3 4 5 0 1.5-.8 3-2 4.2V18h-4v-4.8C8.8 12 8 10.5 8 9c0-2 1.5-5 4-5z"/></svg></div>
@@ -377,6 +413,26 @@ input[type="number"]{width:100%;padding:9px 12px;border:1px solid var(--border);
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
+// LOGIN
+var USUARIOS={'vivero2026':'suegra'};
+function doLogin(){
+  var u=document.getElementById('login-user').value.trim();
+  var p=document.getElementById('login-pass').value;
+  var err=document.getElementById('login-err');
+  if(USUARIOS[u]&&USUARIOS[u]===p){
+    sessionStorage.setItem('vivero_auth','ok');
+    document.getElementById('login-screen').classList.add('hidden');
+    err.style.display='none';
+  }else{
+    err.style.display='block';
+  }
+}
+(function(){
+  if(sessionStorage.getItem('vivero_auth')==='ok'){
+    document.getElementById('login-screen').classList.add('hidden');
+  }
+})();
+
 var VAR_NAMES={robusta:'A. Robusta',laurenti_corta:'B. Laurentii corta',laurenti_larga:'C. Laurentii larga',zelanica:'D. Zeylanica'};
 var VAR_SCI={robusta:'Dracaena trifasciata Robusta',laurenti_corta:'Dracaena trifasciata Laurentii',laurenti_larga:'Dracaena trifasciata Laurentii',zelanica:'Dracaena zeylanica'};
 var VAR_COLORS={robusta:'#2d6a9f',laurenti_corta:'#2d7a5a',laurenti_larga:'#a05a20',zelanica:'#8a3a6a'};
@@ -406,7 +462,6 @@ function decSelect(id,def){
   }
   return s+'</select>';
 }
-
 function load(){
   try{
     var r=localStorage.getItem('vivero_v6');
@@ -416,41 +471,22 @@ function load(){
 function save(){
   try{localStorage.setItem('vivero_v6',JSON.stringify({sessions:sessions,pendingSync:pendingSync,climaRecords:climaRecords}));}catch(e){}
 }
-
 function sessionToRows(s){
   var rows=[];
   var isR=s.variedad==='robusta';
   s.plantas.forEach(function(p){
-    rows.push([
-      s.fecha,s.hora||'',s.lugar||'',s.operador||'',
-      VAR_NAMES[s.variedad],VAR_SCI[s.variedad],
-      p.planta,p.hojas,
-      p.brotes,
-      isR?(p.brotes_ext!==undefined?p.brotes_ext:''):'',
-      p.alt_brote,
-      isR?(p.alt_brote_ext!==undefined?p.alt_brote_ext:''):'',
-      !isR?(p.altura!==undefined?p.altura:''):'',
-      p.amax,
-      p.obs||'',
-      '','','','','',''
-    ]);
+    rows.push([s.fecha,s.hora||'',s.lugar||'',s.operador||'',VAR_NAMES[s.variedad],VAR_SCI[s.variedad],p.planta,p.hojas,p.brotes,isR?(p.brotes_ext!==undefined?p.brotes_ext:''):'',p.alt_brote,isR?(p.alt_brote_ext!==undefined?p.alt_brote_ext:''):'',!isR?(p.altura!==undefined?p.altura:''):'',p.amax,p.obs||'','','','','','','']);
   });
   return rows;
 }
-
 async function syncToSheets(payload){
-  try{
-    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
-    return true;
-  }catch(e){return false;}
+  try{await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});return true;}catch(e){return false;}
 }
-
 async function flushPending(){
   if(!pendingSync.length)return;
   var ok=await syncToSheets(pendingSync);
   if(ok){pendingSync=[];save();showSyncBadge('Sincronizado con Google Sheets','ok');}
 }
-
 async function loadFromSheets(){
   showSyncBadge('Cargando datos...','loading');
   try{
@@ -464,37 +500,19 @@ async function loadFromSheets(){
       if(!r[0])return;
       var key=r[0]+'|'+r[1]+'|'+r[2]+'|'+r[3];
       if(!groups[key])groups[key]={fecha:r[0],lugar:r[1],operador:r[2],varName:r[3],plantas:[]};
-      groups[key].plantas.push({
-        planta:parseInt(r[5],10)||0,
-        hojas:parseFloat(r[6])||0,
-        brotes:parseFloat(r[7])||0,
-        brotes_ext:r[8]!==''?parseFloat(r[8]):undefined,
-        alt_brote:parseFloat(r[9])||0,
-        alt_brote_ext:r[10]!==''?parseFloat(r[10]):undefined,
-        altura:r[11]!==''?parseFloat(r[11]):undefined,
-        amax:parseFloat(r[12])||0,
-        obs:r[13]||''
-      });
+      groups[key].plantas.push({planta:parseInt(r[5],10)||0,hojas:parseFloat(r[6])||0,brotes:parseFloat(r[7])||0,brotes_ext:r[8]!==''?parseFloat(r[8]):undefined,alt_brote:parseFloat(r[9])||0,alt_brote_ext:r[10]!==''?parseFloat(r[10]):undefined,altura:r[11]!==''?parseFloat(r[11]):undefined,amax:parseFloat(r[12])||0,obs:r[13]||''});
     });
     var nameToKey={};
     Object.keys(VAR_NAMES).forEach(function(k){nameToKey[VAR_NAMES[k]]=k;});
     var sheetSessions=[];
     Object.keys(groups).forEach(function(key){
       var g=groups[key];
-      sheetSessions.push({
-        id:key,fecha:g.fecha,lugar:g.lugar,operador:g.operador,
-        variedad:nameToKey[g.varName]||g.varName,
-        plantas:g.plantas.sort(function(a,b){return a.planta-b.planta;})
-      });
+      sheetSessions.push({id:key,fecha:g.fecha,lugar:g.lugar,operador:g.operador,variedad:nameToKey[g.varName]||g.varName,plantas:g.plantas.sort(function(a,b){return a.planta-b.planta;})});
     });
-    sessions=sheetSessions;
-    save();renderStatusGrid();
+    sessions=sheetSessions;save();renderStatusGrid();
     showSyncBadge('Datos actualizados','ok');
-  }catch(e){
-    showSyncBadge('Sin conexion - usando datos locales','warn');
-  }
+  }catch(e){showSyncBadge('Sin conexion - usando datos locales','warn');}
 }
-
 function showSyncBadge(msg,type){
   var el=document.getElementById('sync-badge');
   if(!el)return;
@@ -503,7 +521,6 @@ function showSyncBadge(msg,type){
   var p=c.split('|');el.style.background=p[0];el.style.color=p[1];
   if(type!=='loading')setTimeout(function(){el.style.display='none';},4000);
 }
-
 function showPage(p){
   document.querySelectorAll('.page').forEach(function(el){el.classList.remove('active');});
   document.querySelectorAll('.bnav-btn').forEach(function(el){el.classList.remove('active');});
@@ -516,7 +533,6 @@ function showPage(p){
   if(p==='crecimiento')renderCrecimiento();
   if(p==='clima'){syncClimaFromSession();renderClimaHist();}
 }
-
 function renderStatusGrid(){
   var fecha=document.getElementById('fecha-sesion').value;
   var html='';
@@ -530,7 +546,6 @@ function renderStatusGrid(){
   }
   document.getElementById('status-grid').innerHTML=html;
 }
-
 function validateMeta(){
   var lugar=document.getElementById('meta-lugar').value;
   var op=document.getElementById('meta-operador').value.trim();
@@ -540,13 +555,10 @@ function validateMeta(){
   document.getElementById('meta-operador').classList.toggle('field-error',!op);
   document.getElementById('fecha-sesion').classList.toggle('field-error',!fecha);
   var errs=[];
-  if(!lugar)errs.push('lugar');
-  if(!op)errs.push('nombre y apellido');
-  if(!fecha)errs.push('fecha');
+  if(!lugar)errs.push('lugar');if(!op)errs.push('nombre y apellido');if(!fecha)errs.push('fecha');
   if(errs.length){errEl.textContent='Completa: '+errs.join(', ')+' para continuar.';errEl.style.display='block';return false;}
   errEl.style.display='none';return true;
 }
-
 function selVar(v){
   if(!validateMeta())return;
   curVar=v;
@@ -560,42 +572,29 @@ function selVar(v){
   document.getElementById('form-card').scrollIntoView({behavior:'smooth',block:'start'});
   hideMsg('form-msg');
 }
-
 function buildTable(v){
   var isR=v==='robusta';
   var thead=document.getElementById('session-thead');
-  thead.innerHTML=isR
-    ?'<tr><th>Planta</th><th># Hojas</th><th class="col-extra"># Brotes Int.</th><th class="col-extra"># Brotes Ext.</th><th class="col-extra">Alt. Brote Int. (cm)</th><th class="col-extra">Alt. Brote Ext. (cm)</th><th>Alt. Max (cm)</th><th>Obs.</th></tr>'
-    :'<tr><th>Planta</th><th># Hojas</th><th># Brotes</th><th>Alt. Brote (cm)</th><th>Altura (cm)</th><th>Alt. Max (cm)</th><th>Obs.</th></tr>';
+  thead.innerHTML=isR?'<tr><th>Planta</th><th># Hojas</th><th class="col-extra"># Brotes Int.</th><th class="col-extra"># Brotes Ext.</th><th class="col-extra">Alt. Brote Int. (cm)</th><th class="col-extra">Alt. Brote Ext. (cm)</th><th>Alt. Max (cm)</th><th>Obs.</th></tr>':'<tr><th>Planta</th><th># Hojas</th><th># Brotes</th><th>Alt. Brote (cm)</th><th>Altura (cm)</th><th>Alt. Max (cm)</th><th>Obs.</th></tr>';
   var tbody=document.getElementById('session-tbody');
   tbody.innerHTML='';
   for(var i=1;i<=5;i++){
     var tr=document.createElement('tr');
     var td='<td>P'+i+'</td>';
     td+='<td>'+numSelect('p'+i+'-hojas',0)+'</td>';
-    if(isR){
-      td+='<td class="col-extra">'+numSelect('p'+i+'-brotes',0)+'</td>';
-      td+='<td class="col-extra">'+numSelect('p'+i+'-brotes_ext',0)+'</td>';
-      td+='<td class="col-extra">'+decSelect('p'+i+'-alt')+'</td>';
-      td+='<td class="col-extra">'+decSelect('p'+i+'-alt_ext')+'</td>';
-    }else{
-      td+='<td>'+numSelect('p'+i+'-brotes',0)+'</td>';
-      td+='<td>'+decSelect('p'+i+'-alt')+'</td>';
-      td+='<td>'+decSelect('p'+i+'-altura')+'</td>';
-    }
+    if(isR){td+='<td class="col-extra">'+numSelect('p'+i+'-brotes',0)+'</td><td class="col-extra">'+numSelect('p'+i+'-brotes_ext',0)+'</td><td class="col-extra">'+decSelect('p'+i+'-alt')+'</td><td class="col-extra">'+decSelect('p'+i+'-alt_ext')+'</td>';}
+    else{td+='<td>'+numSelect('p'+i+'-brotes',0)+'</td><td>'+decSelect('p'+i+'-alt')+'</td><td>'+decSelect('p'+i+'-altura')+'</td>';}
     td+='<td>'+decSelect('p'+i+'-amax')+'</td>';
     td+='<td><textarea id="p'+i+'-obs" placeholder=""></textarea></td>';
     tr.innerHTML=td;tbody.appendChild(tr);
   }
 }
-
 function limpiarForm(){if(curVar)buildTable(curVar);hideMsg('form-msg');}
 function showMsg(id,txt,cls){var el=document.getElementById(id);el.textContent=txt;el.className='msg '+cls;el.style.display='block';}
 function hideMsg(id){var el=document.getElementById(id);if(el)el.style.display='none';}
 function getVal(id){var el=document.getElementById(id);return el?parseFloat(el.value):0;}
 function getInt(id){var el=document.getElementById(id);return el?parseInt(el.value,10):0;}
 function getTxt(id){var el=document.getElementById(id);return el?el.value.trim():'';}
-
 async function guardarSesion(){
   if(!validateMeta())return;
   if(!curVar){showMsg('form-msg','Selecciona una variedad.','err');return;}
@@ -619,15 +618,12 @@ async function guardarSesion(){
   else{pendingSync=pendingSync.concat(rows);showMsg('form-msg','Sin conexion - guardado localmente.','ok');}
   save();renderStatusGrid();limpiarForm();
 }
-
-// CRECIMIENTO
 function renderCrecimiento(){
   var v=document.getElementById('crec-var').value;
   var metric=document.getElementById('crec-metric').value;
   var vs=sessions.filter(function(s){return s.variedad===v;}).sort(function(a,b){return a.fecha.localeCompare(b.fecha);});
   var tabHtml='';
-  for(var i=1;i<=5;i++)
-    tabHtml+='<button class="ctab '+(activePlants.indexOf(i)>=0?'active':'')+'" onclick="togglePlant('+i+')">P'+i+'</button>';
+  for(var i=1;i<=5;i++) tabHtml+='<button class="ctab '+(activePlants.indexOf(i)>=0?'active':'')+'\" onclick="togglePlant('+i+')">P'+i+'</button>';
   document.getElementById('chart-plant-tabs').innerHTML=tabHtml;
   var deltaEl=document.getElementById('delta-table');
   var MNAMES={amax:'Altura max (cm)',hojas:'# Hojas',alt_brote:'Altura Brote (cm)',brotes:'# Brotes'};
@@ -656,128 +652,49 @@ function renderCrecimiento(){
   var datasets=[];
   for(var di=1;di<=5;di++){
     if(activePlants.indexOf(di)<0)continue;
-    (function(pi){
-      datasets.push({
-        label:'P'+pi,
-        data:vs.map(function(s){for(var xi=0;xi<s.plantas.length;xi++){if(s.plantas[xi].planta===pi)return s.plantas[xi][metric];}return null;}),
-        borderColor:PLANT_COLORS[pi-1],backgroundColor:PLANT_COLORS[pi-1]+'22',tension:0.3,pointRadius:4,fill:false
-      });
-    })(di);
+    (function(pi){datasets.push({label:'P'+pi,data:vs.map(function(s){for(var xi=0;xi<s.plantas.length;xi++){if(s.plantas[xi].planta===pi)return s.plantas[xi][metric];}return null;}),borderColor:PLANT_COLORS[pi-1],backgroundColor:PLANT_COLORS[pi-1]+'22',tension:0.3,pointRadius:4,fill:false});})(di);
   }
-  growthChart=new Chart(ctx,{
-    type:'line',
-    data:{labels:vs.map(function(s){return s.fecha;}),datasets:datasets},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:10}}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:10}},beginAtZero:false}}}
-  });
+  growthChart=new Chart(ctx,{type:'line',data:{labels:vs.map(function(s){return s.fecha;}),datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:10}}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:10}},beginAtZero:false}}}});
 }
-
-function togglePlant(i){
-  var idx=activePlants.indexOf(i);
-  if(idx>=0)activePlants.splice(idx,1);else activePlants.push(i);
-  renderCrecimiento();
-}
-
-// HISTORIAL — agrupado por sesión, botón borrar en cada sesión, columnas extra para Robusta
+function togglePlant(i){var idx=activePlants.indexOf(i);if(idx>=0)activePlants.splice(idx,1);else activePlants.push(i);renderCrecimiento();}
 function renderHist(){
   var fv=document.getElementById('filt-var').value;
-  var filtered=sessions.filter(function(s){return !fv||s.variedad===fv;})
-    .sort(function(a,b){return b.fecha.localeCompare(a.fecha);});
+  var filtered=sessions.filter(function(s){return !fv||s.variedad===fv;}).sort(function(a,b){return b.fecha.localeCompare(a.fecha);});
   var cont=document.getElementById('hist-body');
   if(!filtered.length){cont.innerHTML='<div class="empty">Sin registros aun</div>';return;}
   var html='';
   filtered.forEach(function(s){
     var isR=s.variedad==='robusta';
-    var color=VAR_COLORS[s.variedad];
-    var bg=VAR_BG[s.variedad];
-    html+='<div class="hist-session">';
-    // Header de sesión
-    html+='<div class="hist-session-header">';
-    html+='<div class="hist-session-meta">';
-    html+='<span class="hist-session-fecha">'+s.fecha+'</span>';
-    html+='<span class="badge" style="background:'+bg+';color:'+color+'">'+VAR_NAMES[s.variedad]+'</span>';
+    var color=VAR_COLORS[s.variedad];var bg=VAR_BG[s.variedad];
+    html+='<div class="hist-session"><div class="hist-session-header"><div class="hist-session-meta"><span class="hist-session-fecha">'+s.fecha+'</span><span class="badge" style="background:'+bg+';color:'+color+'">'+VAR_NAMES[s.variedad]+'</span>';
     if(s.lugar)html+='<span class="hist-session-lugar">📍 '+s.lugar+'</span>';
     if(s.operador)html+='<span class="hist-session-lugar">👤 '+s.operador+'</span>';
-    html+='</div>';
-    html+='<button class="btn btn-danger" onclick="borrarSesion('+JSON.stringify(s.id)+',this)">Borrar sesion</button>';
-    html+='</div>';
-    // Tabla de plantas
+    html+='</div><button class="btn btn-danger" onclick="borrarSesion('+JSON.stringify(s.id)+',this)">Borrar sesion</button></div>';
     html+='<div class="hist-plantas-wrap"><table class="hist">';
-    if(isR){
-      html+='<thead><tr><th>Planta</th><th>Hojas</th><th>Brotes Int.</th><th>Brotes Ext.</th><th>Alt.Brote Int.</th><th>Alt.Brote Ext.</th><th>Alt.Max</th><th>Obs.</th><th></th></tr></thead>';
-    }else{
-      html+='<thead><tr><th>Planta</th><th>Hojas</th><th>Brotes</th><th>Alt.Brote</th><th>Altura</th><th>Alt.Max</th><th>Obs.</th><th></th></tr></thead>';
-    }
+    if(isR){html+='<thead><tr><th>Planta</th><th>Hojas</th><th>Brotes Int.</th><th>Brotes Ext.</th><th>Alt.Brote Int.</th><th>Alt.Brote Ext.</th><th>Alt.Max</th><th>Obs.</th><th></th></tr></thead>';}
+    else{html+='<thead><tr><th>Planta</th><th>Hojas</th><th>Brotes</th><th>Alt.Brote</th><th>Altura</th><th>Alt.Max</th><th>Obs.</th><th></th></tr></thead>';}
     html+='<tbody>';
     s.plantas.forEach(function(p){
-      html+='<tr><td>P'+p.planta+'</td>';
-      html+='<td>'+p.hojas+'</td>';
-      if(isR){
-        html+='<td>'+(p.brotes!==undefined?p.brotes:'—')+'</td>';
-        html+='<td>'+(p.brotes_ext!==undefined?p.brotes_ext:'—')+'</td>';
-        html+='<td>'+(p.alt_brote!==undefined?p.alt_brote:'—')+'</td>';
-        html+='<td>'+(p.alt_brote_ext!==undefined?p.alt_brote_ext:'—')+'</td>';
-      }else{
-        html+='<td>'+(p.brotes!==undefined?p.brotes:'—')+'</td>';
-        html+='<td>'+(p.alt_brote!==undefined?p.alt_brote:'—')+'</td>';
-        html+='<td>'+(p.altura!==undefined?p.altura:'—')+'</td>';
-      }
-      html+='<td>'+(p.amax!==undefined?p.amax:'—')+'</td>';
-      html+='<td style="font-size:11px;color:var(--text-muted);text-align:left;">'+((p.obs&&p.obs.trim())?p.obs:'')+'</td>';
-      html+='<td><button class="btn btn-danger" onclick="borrarPlanta('+JSON.stringify(s.id)+','+p.planta+',this)">✕</button></td>';
-      html+='</tr>';
+      html+='<tr><td>P'+p.planta+'</td><td>'+p.hojas+'</td>';
+      if(isR){html+='<td>'+(p.brotes!==undefined?p.brotes:'—')+'</td><td>'+(p.brotes_ext!==undefined?p.brotes_ext:'—')+'</td><td>'+(p.alt_brote!==undefined?p.alt_brote:'—')+'</td><td>'+(p.alt_brote_ext!==undefined?p.alt_brote_ext:'—')+'</td>';}
+      else{html+='<td>'+(p.brotes!==undefined?p.brotes:'—')+'</td><td>'+(p.alt_brote!==undefined?p.alt_brote:'—')+'</td><td>'+(p.altura!==undefined?p.altura:'—')+'</td>';}
+      html+='<td>'+(p.amax!==undefined?p.amax:'—')+'</td><td style="font-size:11px;color:var(--text-muted);text-align:left;">'+((p.obs&&p.obs.trim())?p.obs:'')+'</td>';
+      html+='<td><button class="btn btn-danger" onclick="borrarPlanta('+JSON.stringify(s.id)+','+p.planta+',this)">✕</button></td></tr>';
     });
     html+='</tbody></table></div></div>';
   });
   cont.innerHTML=html;
 }
-
-function borrarPlanta(sesionId, plantaNum, btnEl){
-  if(btnEl.dataset.confirm!=='1'){
-    btnEl.dataset.confirm='1';
-    btnEl.textContent='Confirmar';
-    btnEl.style.background='var(--danger)';
-    btnEl.style.color='#fff';
-    setTimeout(function(){
-      if(btnEl.dataset.confirm==='1'){
-        btnEl.dataset.confirm='';
-        btnEl.textContent='✕';
-        btnEl.style.background='';
-        btnEl.style.color='';
-      }
-    },3000);
-    return;
-  }
-  for(var i=0;i<sessions.length;i++){
-    if(sessions[i].id==sesionId){
-      sessions[i].plantas=sessions[i].plantas.filter(function(p){return p.planta!==plantaNum;});
-      if(sessions[i].plantas.length===0) sessions.splice(i,1);
-      break;
-    }
-  }
+function borrarPlanta(sesionId,plantaNum,btnEl){
+  if(btnEl.dataset.confirm!=='1'){btnEl.dataset.confirm='1';btnEl.textContent='Confirmar';btnEl.style.background='var(--danger)';btnEl.style.color='#fff';setTimeout(function(){if(btnEl.dataset.confirm==='1'){btnEl.dataset.confirm='';btnEl.textContent='✕';btnEl.style.background='';btnEl.style.color='';}},3000);return;}
+  for(var i=0;i<sessions.length;i++){if(sessions[i].id==sesionId){sessions[i].plantas=sessions[i].plantas.filter(function(p){return p.planta!==plantaNum;});if(sessions[i].plantas.length===0)sessions.splice(i,1);break;}}
   save();renderHist();renderStatusGrid();
 }
-
-function borrarSesion(id, btnEl){
-  if(btnEl.dataset.confirm!=='1'){
-    btnEl.dataset.confirm='1';
-    btnEl.textContent='Confirmar borrado';
-    btnEl.style.background='var(--danger)';
-    btnEl.style.color='#fff';
-    setTimeout(function(){
-      if(btnEl.dataset.confirm==='1'){
-        btnEl.dataset.confirm='';
-        btnEl.textContent='Borrar sesion';
-        btnEl.style.background='';
-        btnEl.style.color='';
-      }
-    },3000);
-    return;
-  }
+function borrarSesion(id,btnEl){
+  if(btnEl.dataset.confirm!=='1'){btnEl.dataset.confirm='1';btnEl.textContent='Confirmar borrado';btnEl.style.background='var(--danger)';btnEl.style.color='#fff';setTimeout(function(){if(btnEl.dataset.confirm==='1'){btnEl.dataset.confirm='';btnEl.textContent='Borrar sesion';btnEl.style.background='';btnEl.style.color='';}},3000);return;}
   sessions=sessions.filter(function(s){return s.id!=id;});
   save();renderHist();renderStatusGrid();
 }
-
-// EXPORTAR CSV — sin abrir nueva ventana, usa blob directo
 function exportCSV(){
   var headers=['Fecha','Hora_Toma','Lugar','Operador','Variedad','Nombre_Cientifico','Planta','Hojas','Brotes_Int','Brotes_Ext','Alt_Brote_Int_cm','Alt_Brote_Ext_cm','Altura_cm','Alt_Max_cm','Observaciones','Temp_Min_Semana','Temp_Max_Semana','Temp_Actual','Hum_Min_Semana','Hum_Max_Semana','Hum_Actual'];
   var climaMap={};
@@ -787,55 +704,20 @@ function exportCSV(){
     var isR=s.variedad==='robusta';
     var cr=climaMap[s.fecha+'|'+(s.lugar||'')];
     s.plantas.forEach(function(p){
-      var row=[
-        s.fecha,s.hora||'',s.lugar||'',s.operador||'',
-        VAR_NAMES[s.variedad],VAR_SCI[s.variedad],
-        p.planta,p.hojas,
-        p.brotes!==undefined?p.brotes:'',
-        isR?(p.brotes_ext!==undefined?p.brotes_ext:''):'',
-        p.alt_brote!==undefined?p.alt_brote:'',
-        isR?(p.alt_brote_ext!==undefined?p.alt_brote_ext:''):'',
-        !isR?(p.altura!==undefined?p.altura:''):'',
-        p.amax!==undefined?p.amax:'',
-        '"'+(p.obs||'').replace(/"/g,'""')+'"',
-        cr&&cr.temp_min!=null?cr.temp_min:'',
-        cr&&cr.temp_max!=null?cr.temp_max:'',
-        cr&&cr.temp_actual!=null?cr.temp_actual:'',
-        cr&&cr.hum_min!=null?cr.hum_min:'',
-        cr&&cr.hum_max!=null?cr.hum_max:'',
-        cr&&cr.hum_actual!=null?cr.hum_actual:''
-      ];
+      var row=[s.fecha,s.hora||'',s.lugar||'',s.operador||'',VAR_NAMES[s.variedad],VAR_SCI[s.variedad],p.planta,p.hojas,p.brotes!==undefined?p.brotes:'',isR?(p.brotes_ext!==undefined?p.brotes_ext:''):'',p.alt_brote!==undefined?p.alt_brote:'',isR?(p.alt_brote_ext!==undefined?p.alt_brote_ext:''):'',!isR?(p.altura!==undefined?p.altura:''):'',p.amax!==undefined?p.amax:'','"'+(p.obs||'').replace(/"/g,'""')+'"',cr&&cr.temp_min!=null?cr.temp_min:'',cr&&cr.temp_max!=null?cr.temp_max:'',cr&&cr.temp_actual!=null?cr.temp_actual:'',cr&&cr.hum_min!=null?cr.hum_min:'',cr&&cr.hum_max!=null?cr.hum_max:'',cr&&cr.hum_actual!=null?cr.hum_actual:''];
       rows.push(row.join(','));
     });
   });
-  var csv=rows.join('\n');
-  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;
-  a.download=new Date().toISOString().split('T')[0]+'_Sansevieria.csv';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+  var blob=new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=new Date().toISOString().split('T')[0]+'_Sansevieria.csv';document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
 }
-
 function exportClimaCSV(){
   var headers=['Fecha','Hora','Lugar','Temp_Min','Temp_Max','Temp_Actual','Hum_Min','Hum_Max','Hum_Actual'];
   var rows=[headers.join(',')];
-  climaRecords.slice().sort(function(a,b){return b.fecha.localeCompare(a.fecha);}).forEach(function(r){
-    rows.push([r.fecha,r.hora||'',r.lugar||'',r.temp_min!=null?r.temp_min:'',r.temp_max!=null?r.temp_max:'',r.temp_actual!=null?r.temp_actual:'',r.hum_min!=null?r.hum_min:'',r.hum_max!=null?r.hum_max:'',r.hum_actual!=null?r.hum_actual:''].join(','));
-  });
+  climaRecords.slice().sort(function(a,b){return b.fecha.localeCompare(a.fecha);}).forEach(function(r){rows.push([r.fecha,r.hora||'',r.lugar||'',r.temp_min!=null?r.temp_min:'',r.temp_max!=null?r.temp_max:'',r.temp_actual!=null?r.temp_actual:'',r.hum_min!=null?r.hum_min:'',r.hum_max!=null?r.hum_max:'',r.hum_actual!=null?r.hum_actual:''].join(','));});
   var blob=new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;
-  a.download=new Date().toISOString().split('T')[0]+'_Clima.csv';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+  var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=new Date().toISOString().split('T')[0]+'_Clima.csv';document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
 }
-
-// AGENTE
 async function sendAgent(){var inp=document.getElementById('agent-input');var q=inp.value.trim();if(!q)return;inp.value='';await runAgent(q);}
 async function quickQ(q){await runAgent(q);}
 async function runAgent(q){
@@ -859,8 +741,6 @@ async function runAgent(q){
   }catch(e){ab.innerHTML='<div style="color:var(--danger);">Error al conectar.</div>';}
   chatDiv.scrollTop=chatDiv.scrollHeight;
 }
-
-// CLIMA
 function syncClimaFromSession(){
   var fecha=document.getElementById('fecha-sesion').value;
   var lugar=document.getElementById('meta-lugar').value;
@@ -875,7 +755,6 @@ function syncClimaFromSession(){
   else if(lugar==='San Rafael'){lbl.innerHTML=icon+' Vivero San Rafael';card.className='clima-vivero-card sr';}
   else{lbl.innerHTML=icon+' Vivero — (selecciona lugar en Registro)';}
 }
-
 function guardarClima(){
   var fecha=document.getElementById('fecha-sesion').value;
   var lugar=document.getElementById('meta-lugar').value;
@@ -885,18 +764,12 @@ function guardarClima(){
   var rec={id:Date.now(),fecha:fecha,hora:hora||'',lugar:lugar||'',temp_min:fNum('c-temp-min'),temp_max:fNum('c-temp-max'),hum_min:fNum('c-hum-min'),hum_max:fNum('c-hum-max'),temp_actual:fNum('c-temp-actual'),hum_actual:fNum('c-hum-actual')};
   climaRecords.push(rec);save();
   var climaRow=[[rec.fecha,rec.hora,rec.lugar,rec.temp_min,rec.temp_max,rec.temp_actual,rec.hum_min,rec.hum_max,rec.hum_actual]];
-  syncToSheets({type:'clima',rows:climaRow}).then(function(ok){
-    showMsg('clima-msg',ok?'Clima guardado en Google Sheets.':'Sin conexion - guardado localmente.','ok');
-  });
+  syncToSheets({type:'clima',rows:climaRow}).then(function(ok){showMsg('clima-msg',ok?'Clima guardado en Google Sheets.':'Sin conexion - guardado localmente.','ok');});
   renderClimaHist();limpiarClima();
 }
-
 function limpiarClima(){
-  ['c-temp-min','c-temp-max','c-hum-min','c-hum-max','c-temp-actual','c-hum-actual'].forEach(function(id){
-    var el=document.getElementById(id);if(el)el.value='';
-  });
+  ['c-temp-min','c-temp-max','c-hum-min','c-hum-max','c-temp-actual','c-hum-actual'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
 }
-
 function renderClimaHist(){
   var el=document.getElementById('clima-hist-list');
   if(!climaRecords.length){el.innerHTML='<div class="empty">Sin registros aun</div>';return;}
@@ -910,34 +783,16 @@ function renderClimaHist(){
     html+='<button class="btn btn-danger" onclick="borrarClima('+rec.id+',this)">Borrar</button></div>';
     html+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">';
     var items=[['T° Min',rec.temp_min,'°C','#fff3e0','#e65100'],['T° Max',rec.temp_max,'°C','#fff3e0','#e65100'],['T° Actual',rec.temp_actual,'°C','#fff8f0','#c0440a'],['H% Min',rec.hum_min,'%','#e3f2fd','#1565c0'],['H% Max',rec.hum_max,'%','#e3f2fd','#1565c0'],['H% Actual',rec.hum_actual,'%','#f0f8ff','#0d47a1']];
-    items.forEach(function(it){
-      html+='<div style="background:'+it[3]+';border-radius:7px;padding:7px 8px;text-align:center;"><div style="font-size:16px;font-weight:600;font-family:DM Mono,monospace;color:'+it[4]+'">'+(it[1]!==null&&it[1]!==undefined?it[1]+it[2]:'—')+'</div><div style="font-size:9px;color:var(--text-muted);font-family:DM Mono,monospace;margin-top:2px;">'+it[0]+'</div></div>';
-    });
+    items.forEach(function(it){html+='<div style="background:'+it[3]+';border-radius:7px;padding:7px 8px;text-align:center;"><div style="font-size:16px;font-weight:600;font-family:DM Mono,monospace;color:'+it[4]+'">'+(it[1]!==null&&it[1]!==undefined?it[1]+it[2]:'—')+'</div><div style="font-size:9px;color:var(--text-muted);font-family:DM Mono,monospace;margin-top:2px;">'+it[0]+'</div></div>';});
     html+='</div></div>';
   });
   el.innerHTML=html;
 }
-
-function borrarClima(id, btnEl){
-  if(btnEl.dataset.confirm!=='1'){
-    btnEl.dataset.confirm='1';
-    btnEl.textContent='Confirmar';
-    btnEl.style.background='var(--danger)';
-    btnEl.style.color='#fff';
-    setTimeout(function(){
-      if(btnEl.dataset.confirm==='1'){
-        btnEl.dataset.confirm='';
-        btnEl.textContent='Borrar';
-        btnEl.style.background='';
-        btnEl.style.color='';
-      }
-    },3000);
-    return;
-  }
+function borrarClima(id,btnEl){
+  if(btnEl.dataset.confirm!=='1'){btnEl.dataset.confirm='1';btnEl.textContent='Confirmar';btnEl.style.background='var(--danger)';btnEl.style.color='#fff';setTimeout(function(){if(btnEl.dataset.confirm==='1'){btnEl.dataset.confirm='';btnEl.textContent='Borrar';btnEl.style.background='';btnEl.style.color='';}},3000);return;}
   climaRecords=climaRecords.filter(function(r){return r.id!==id;});
   save();renderClimaHist();
 }
-
 // INIT
 load();
 var _now=new Date();
@@ -950,3 +805,6 @@ flushPending();
 </script>
 </body>
 </html>
+```
+
+Ahora ve a GitHub, abre el archivo `index.html`, haz clic en el **lápiz ✏️**, selecciona todo **(Ctrl+A)**, borra, pega este código y haz clic en **"Confirma los cambios"**. 🌿
